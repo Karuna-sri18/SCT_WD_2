@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stop watch</title>
+    <style>
+        html,body{
+            background-color: lightpink;
+            font-size: 50px;
+            display:flex;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            padding:20px;
+            flex-direction:column;
+            align-items:center;
+            justify-content: center;
+            height:100vh;
+        }
+        h1{
+            background-color: skyblue;
+            color: firebrick;
+            max-width: 3000px;
+            text-align:center;
+        }
+         p,div {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+        .container{
+            display:flex;
+            gap:10px;
+            justify-content:center;
+            font-size:80px;
+            margin-bottom:10px;
+            padding:0;
+            line-height: 1;
+        }
+        .labels{
+            display:flex;
+            gap:40px;
+            justify-content:center;
+            font-size:25px;
+            margin-bottom:20px;
+            padding:0;
+            line-height: 1;
+        }
+        div{
+            display:flex;
+            align-content:center;  
+            gap:5px;
+            font-size: 5px;
+        }
+        .button{
+             display: flex;
+            justify-content: center;
+            gap: 80px;
+            font-size: 30px;
+            padding: 30px;
+        }
+         button {
+             padding:40px;
+             font-size: 20px;
+             border-radius: 10px;
+             background-color: lightblue;
+            border: 1px solid #333;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .btn-icon {
+             width: 20px;
+             height: 20px;
+        }
+        button:hover {
+            background-color: blue;
+            color: white;
+        }
+        #pause-log-container {
+            max-width: 400px;
+            margin: 20px auto 0;
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 20px;
+            text-align: left;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        #pause-log-container h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: firebrick;
+            text-align: center;
+        }
+        #pause-log {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+        #logs-wrapper {
+            display: flex;                
+            justify-content: center;     
+            gap: 40px;       
+            font-size: 50px;    
+            margin-top: 20px;
+             flex-wrap: wrap;            
+        }
+        #lap-log-container{
+            max-width: 400px;
+            margin: 20px auto 0;
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 20px;
+            text-align: left;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        h3{
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: firebrick;
+            text-align: center;
+        }
+        #lap-log
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>STOP WATCH</h1>
+    <div class="container">
+        <p class="hours">00:</p>
+        <p class="minutes">00:</p>
+        <p class="seconds">00</p>
+    </div>
+    <div class="labels">
+        <p>Hours</p>
+        <p>Minutes</p>
+        <p>Seconds</p>
+    </div>
+    <div class="button">
+        <button id="start">
+            <img src="start.png" alt="start" class="btn-icon" />
+            START
+        </button>
+        <button id="pause">
+            <img src="1mqd24m1mqrnq1.png" alt="pause" class="btn-icon" />
+            PAUSE    
+        </button>
+        <button id="reset">
+            <img src="reset.png" alt="reset" class="btn-icon" />
+            RESET
+        </button>
+        <button id="lap">
+        <img src="lap.png" alt="lap" class="btn-icon" />
+            LAP
+        </button>
+    </div>
+
+    <!-- Pause times log -->
+    <!-- <div id="pause-log-container"> -->
+        <!-- <h2>Pause Times</h2>
+        <ul id="pause-log"></ul>
+    </div>
+
+    <div id="lap-log-container">
+        <h2>Lap Times</h2>
+        <ul id="lap-log"></ul>
+    </div> -->
+    <!-- WRAP both pause-log-container and lap-log-container in this new div -->
+<div id="logs-wrapper">
+    <div id="pause-log-container">
+        <h2>Pause Times</h2>
+        <ul id="pause-log"></ul>
+    </div>
+
+    <div id="lap-log-container">
+       <h3>Lap times</h3>
+        <ul id="lap-log"></ul>
+    </div>
+</div>
+
+
+
+
+<script>
+    let hours=0;
+    let minutes=0;
+    let seconds=0;
+    let timer=null;
+    const hourDisplay=document.querySelector(".hours");
+    const minuteDisplay=document.querySelector(".minutes");
+    const secondDisplay=document.querySelector(".seconds");
+    const pauseLog = document.getElementById("pause-log");
+
+    function updateDisplay(){
+        hourDisplay.textContent=(hours < 10 ? "0" + hours : hours)+ ":";
+        minuteDisplay.textContent=(minutes < 10 ? "0" + minutes : minutes) + ":";
+        secondDisplay.textContent=(seconds < 10 ? "0" + seconds : seconds);
+    }
+
+    function stopwatch(){
+        seconds++;
+        if(seconds===60){
+            seconds=0;
+            minutes++;
+        }
+        if(minutes===60){
+            minutes=0;
+            hours++;
+        }
+        updateDisplay();
+    }
+
+    function getCurrentTimeString() {
+        return (hours < 10 ? "0" + hours : hours) + ":" +
+               (minutes < 10 ? "0" + minutes : minutes) + ":" +
+               (seconds < 10 ? "0" + seconds : seconds);
+    }
+
+    document.getElementById("start").addEventListener("click",function(){
+        if(timer===null){
+            timer=setInterval(stopwatch,1000);
+        }
+    });
+
+    document.getElementById("pause").addEventListener("click",function(){
+        if(timer !== null){
+            clearInterval(timer);
+            timer=null;
+
+            // Log the pause time
+            const li = document.createElement("li");
+            li.textContent = getCurrentTimeString();
+            pauseLog.appendChild(li);
+        }
+    });
+
+    document.getElementById("reset").addEventListener("click",function(){
+        clearInterval(timer);
+        timer=null;
+        hours=0;
+        minutes=0;
+        seconds=0;
+        updateDisplay();
+        pauseLog.innerHTML = "";  // Clear pause log on reset
+        lapLog.innerHTML = "";
+        lastLapTime = 0;
+
+    });
+    let lapLog = document.getElementById("lap-log");
+    let lastLapTime = 0;
+
+document.getElementById("lap").addEventListener("click", function () {
+    if (timer !== null) {
+        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        const lapTime = totalSeconds - lastLapTime;
+        lastLapTime = totalSeconds;
+
+        const lapHours = Math.floor(lapTime / 3600);
+        const lapMinutes = Math.floor((lapTime % 3600) / 60);
+        const lapSeconds = lapTime % 60;
+
+        const li = document.createElement("li");
+        li.textContent = `Lap ${lapLog.children.length + 1}: ` +
+            (lapHours < 10 ? "0" + lapHours : lapHours) + ":" +
+            (lapMinutes < 10 ? "0" + lapMinutes : lapMinutes) + ":" +
+            (lapSeconds < 10 ? "0" + lapSeconds : lapSeconds);
+        lapLog.appendChild(li);
+    }
+});
+
+</script>
+</body>
+</html>
